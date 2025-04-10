@@ -1,0 +1,13 @@
+Run a bit of QC:
+plink --bfile ~/Documents/quant_bio/all_hg38 --geno 0.01 --maf 0.01 --make-bed --out ~/Documents/quant_bio/filtered_all_hg38
+
+Obtain high LD region file:
+https://github.com/meyer-lab-cshl/plinkQC/blob/master/inst/extdata/high-LD-regions-hg38-GRCh38.txt 
+
+Remove HLA and other high LD regions:
+plink --bfile ~/Documents/quant_bio/filtered_all_hg38 --make-set ~/Downloads/high-LD-regions-hg38-GRCh38.txt --write-set --out ~/Documents/quant_bio/high_ld_set
+plink --bfile ~/Documents/quant_bio/filtered_all_hg38 --exclude  ~/Documents/quant_bio/high_ld_set.set --make-bed --out  ~/Documents/quant_bio/no_high_ld_all_hg38
+
+LD prune:
+plink --bfile ~/Documents/quant_bio/no_high_ld_all_hg38 --indep-pairwise 200 1 0.3 --out ~/Documents/quant_bio/LD_prune_list
+plink --bfile ~/Documents/quant_bio/no_high_ld_all_hg38 --extract ~/Documents/quant_bio/LD_prune_list.prune.in --make-bed --out ~/Documents/quant_bio/ld_pruned_all_hg38

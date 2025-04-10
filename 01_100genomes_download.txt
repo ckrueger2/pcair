@@ -1,0 +1,29 @@
+Download PLINK from:
+https://www.cog-genomics.org/plink/2.0/
+https://www.cog-genomics.org/plink/1.9/
+
+Unzip files
+
+Move files
+sudo mv ~/Downloads/plink_mac_20241022/plink /usr/local/bin/
+sudo mv ~/Downloads/plink2_mac_arm64_20250129/plink2 /usr/local/bin/
+
+Activate
+source ~/.zshrc
+
+Download files:
+https://www.cog-genomics.org/plink/2.0/resources#phase3_1kg 
+
+https://uc27b7662f088f2a13a4f55901bc.dl.dropboxusercontent.com/cd/0/get/CndyoXfggK7aFq43l9sYA4HDzFIqMkrB7Qdh90chzCcsMKCbwwgMZypiqOMo02Ti10w7KL0qliO3q_vf2VTC2awaknMRubc4mr5i7WQikyV9_QzHxDJWHSLZ8E2QOVOfYZA3Y89uQK2MmmUx8SM1Gggb/file?dl=1#
+https://www.dropbox.com/scl/fi/fn0bcm5oseyuawxfvkcpb/all_hg38_rs.pvar.zst?rlkey=przncwb78rhz4g4ukovocdxaz&dl=1
+https://www.dropbox.com/scl/fi/u5udzzaibgyvxzfnjcvjc/hg38_corrected.psam?rlkey=oecjnk4vmbhc8b1p202l0ih4x&dl=1
+
+Decompress 1000 genomes files:
+zstd -d ~/Documents/all_hg38.pgen.zst -o ~/Documents/quant_bio/all_hg38.pgen
+zstd -d ~/Documents/all_hg38_rs.pvar.zst -o ~/Documents/quant_bio/all_hg38.pvar
+
+Rename psam file:
+cp ~/Documents/hg38_corrected.psam ~/Documents/quant_bio/all_hg38.psam
+
+Make bed/bim/bed files:
+plink2 --pfile ~/Documents/quant_bio/all_hg38 --max-alleles 2 --chr 1-22 --output-chr 26 --make-bed --out ~/Documents/quant_bio/all_hg38
