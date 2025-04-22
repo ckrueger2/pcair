@@ -1,0 +1,25 @@
+PERMANOVA results for SAS :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+           Df SumOfSqs      R2      F Pr(>F)
+Model       1   0.0068 0.00063 0.7531  0.595
+Residual 1200  10.8062 0.99937              
+Total    1201  10.8130 1.00000              
+
+2. Effect of Population and Method:
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Population + Method, data = permanova_data, permutations = 999, method = "euclidean")
+           Df SumOfSqs      R2      F Pr(>F)    
+Model       5   2.2136 0.20472 61.573  0.001 ***
+Residual 1196   8.5994 0.79528                  
+Total    1201  10.8130 1.00000                  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
