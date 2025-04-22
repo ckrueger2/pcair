@@ -7,8 +7,7 @@ library(readxl)
 library(knitr)
 library(ggplot2)
 library(argparse)
-
-#Rscript ~/Documents/quant_bio/03pcair.R --BfileDir ~/Documents/quant_bio/ -o ~/Documents/quant_bio/pcair/
+library(vegan)
 
 #LD pruned plink files to GDS files
 snpgdsBED2GDS(bed.fn = file.path("~/Documents/quant_bio/ld_pruned_all_hg38.bed"), 
@@ -35,6 +34,7 @@ gdsfile_path <- file.path("~/Documents/quant_bio/pcair/merged_races.gds")
 #Open gdsfile
 gdsfile <- snpgdsOpen(gdsfile_path)
 
+#PC-AIR ANALYSIS
 #Create KING matrix
 king_result <- snpgdsIBDKING(gdsfile)
 king_matrix <- king_result$kinship
@@ -45,6 +45,9 @@ colnames(king_matrix) <- king_result$sample.id
 row.names(king_matrix) <- king_result$sample.id
 king_matrix[1:5,1:5] #Check new headers
 
+#Save king results
+save(king_result, king_matrix, file = paste0(results_base, "_king.RData"))
+
 #Close the SNPRelate 
 snpgdsClose(gdsfile)
 
@@ -54,6 +57,12 @@ genoData <- GenotypeData(geno)
 
 #Run PC-AiR on pruned SNPs
 pcair_run <- pcair(genoData, kinobj = king_matrix, divobj = king_matrix)
+
+#Close the GenotypeData reader
+close(geno)
+
+#Save PC-AIR results
+save(pcair_run, file = pcair_results)
 
 #Plot PCA-Air PCs
 pdf(file.path("~/Documents/quant_bio/pcair/", "PC-AiR_plots.pdf"))
@@ -68,9 +77,9 @@ dev.off()
 
 #Save eigenvalues
 value_file <- file.path("~/Documents/quant_bio/pcair/pca.eigenval") #Save output path
-eigenval <- pcair_run$values   # Eigenvalues for each PC
+eigenval <- pcair_run$values   #Eigenvalues for each PC
 eigenval_subset <- eigenval[1:10, drop = FALSE] #Keep only first 10 PCs
-write.table(eigenval_subset, file.path("~/Documents/quant_bio/pcair/pca.eigenval"), quote = FALSE, row.names = FALSE, col.names = FALSE)
+write.table(eigenval_subset, file.path("~/Documents/quant_bio/pcair/pcair.eigenval"), quote = FALSE, row.names = FALSE, col.names = FALSE)
 
 #Save eigenvectors
 #Get the summary of PC-AiR results
@@ -82,36 +91,41 @@ eigenvec <- pcair_summary$vectors
 #Prepare the data frame for eigenvectors
 fam_data <- read.table(file.path("~/Documents/quant_bio/", "ld_pruned_all_hg38.fam"), header = FALSE)
 colnames(fam_data) <- c("FID", "IID", "PAT", "MAT", "SEX", "PHENOTYPE")
-eigenvec_df <- data.frame(FID = fam_data$FID, IID = fam_data$IID, eigenvec)
+eigenvec_df_pcair <- data.frame(FID = fam_data$FID, IID = fam_data$IID, eigenvec)
 
 #Save eigenvectors to directory
-eigenvec_subset <- eigenvec_df[1:12] #Keep only first 10 PCs
-colnames(eigenvec_subset) <- c("FID", "IID", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")
-eigenvec_path <- file.path("~/Documents/quant_bio/pcair/pca.eigenvec")  # Specify your output path
-write.table(eigenvec_subset, eigenvec_path, quote = FALSE, row.names = FALSE, col.names = TRUE)
+eigenvec_subset_pcair <- eigenvec_df_pcair[1:12] #Keep only first 10 PCs
+colnames(eigenvec_subset_pcair) <- c("FID", "IID", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")
+eigenvec_path_pcair <- file.path("~/Documents/quant_bio/pcair/pcair.eigenvec")  # Specify your output path
+write.table(eigenvec_subset_pcair, eigenvec_path_pcair, quote = FALSE, row.names = FALSE, col.names = TRUE)
 
-#Read in PCA files
-pops = fread(file.path("~/Documents/quant_bio/all_hg38.psam"))
-evec = fread(file.path("~/Documents/quant_bio/pcair/pca.eigenvec"))
-eval = fread(file.path("~/Documents/quant_bio/pcair/pca.eigenval"))
+#Save results
+save(pcair_run, fam_data, pcair_summary, eigenvec_df_pcair, file = paste0(results_base, "_pcair_vectors.RData"))
 
-all = left_join(evec, pops, by = c("IID" = "#IID"))
+#STANDARD PCA
+#Re-open GDS file
+gdsfile <- snpgdsOpen(gdsfile_path)
 
-#Plot PCA
-pdf(file.path("~/Documents/quant_bio/pcair/", "pca_plots.pdf"))
+#Run standard PCA
+pca_run <- snpgdsPCA(gdsfile, num.thread = 2)
 
-ggplot(all,aes(x=PC1,y=PC2,color=Population,label=SuperPop)) + geom_text(size=1.25)+ theme_bw(16)
-ggplot(all,aes(x=PC1,y=PC3,color=Population,label=SuperPop)) + geom_text(size=1.25)+ theme_bw(16)
-ggplot(all,aes(x=PC1,y=PC4,color=Population,label=SuperPop)) + geom_text(size=1.25) + theme_bw(16)
-ggplot(all,aes(x=PC2,y=PC3,color=Population,label=SuperPop)) + geom_text(size=1.25)+ theme_bw(16)
-ggplot(all,aes(x=PC3,y=PC4,color=Population,label=SuperPop)) + geom_text(size=1.25) + theme_bw(16)
+#Save PCA results
+save(pca_run, file = pca_results)
 
-dev.off()
+#Save eigenvalues for standard PCA
+eigenval_pca <- pca_run$eigenval
+eigenval_subset_pca <- eigenval_pca[1:10, drop = FALSE]
+write.table(eigenval_subset_pca, file.path("~/Documents/quant_bio/pcair/pca.eigenval"), quote = FALSE, row.names = FALSE, col.names = FALSE)
 
-#Use the dplyr function mutate to add a column named PC of numbers 1-10 and proportion variance explained by each PC
-eval = mutate(eval,PC=as.factor(1:10),pve=V1/sum(V1))
+#Save eigenvectors for standard PCA
+eigenvec_pca <- pca_run$eigenvect[, 1:10]
+sample_ids <- read.gdsn(index.gdsn(gdsfile, "sample.id"))
+eigenvec_df_pca <- data.frame(FID = fam_data$FID, IID = fam_data$IID, eigenvec_pca)
+colnames(eigenvec_df_pca) <- c("FID", "IID", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")
+write.table(eigenvec_df_pca, file.path("~/Documents/quant_bio/pcair/pca.eigenvec"), quote = FALSE, row.names = FALSE, col.names = TRUE)
 
-#Plot PCs
-pdf(file.path("~/Documents/quant_bio/pcair/", "scree_plot.pdf"))
-ggplot(eval, aes(x=PC, y=pve, group=1)) + geom_point() + geom_line() + ylab("variance explained")+ theme_bw(16)
-dev.off()
+#Close GDS file
+snpgdsClose(gdsfile)
+
+#Save results
+save(pca_run, eigenvec_df_pca, file = paste0(results_base, "_pca_vectors.RData"))
