@@ -1,0 +1,16 @@
+Mantel test comparing distance matrices from Standard PCA and PC-AIR for GBR :
+
+Mantel statistic based on Spearman's rank correlation rho 
+
+Call:
+mantel(xdis = pca_dist, ydis = pcair_dist, method = "spearman",      permutations = 999) 
+
+Mantel statistic r: 0.512 
+      Significance: 0.001 
+
+Upper quantiles of permutations (null model):
+   90%    95%  97.5%    99% 
+0.0893 0.1118 0.1430 0.1641 
+Permutation: free
+Number of permutations: 999
+

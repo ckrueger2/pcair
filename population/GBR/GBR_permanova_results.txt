@@ -1,0 +1,14 @@
+PERMANOVA results for GBR :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs R2     F Pr(>F)
+Model      1    0.000  0 5e-04      1
+Residual 180   10.005  1             
+Total    181   10.005  1             
+
+Note: Only one SuperPop level found for this population, so SuperPop PERMANOVA tests were skipped.

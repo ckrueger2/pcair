@@ -1,0 +1,14 @@
+PERMANOVA results for FIN :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs R2  F Pr(>F)
+Model      1        0  0  0      1
+Residual 196       10  1          
+Total    197       10  1          
+
+Note: Only one SuperPop level found for this population, so SuperPop PERMANOVA tests were skipped.
