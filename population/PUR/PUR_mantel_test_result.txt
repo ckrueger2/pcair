@@ -1,0 +1,16 @@
+Mantel test comparing distance matrices from Standard PCA and PC-AIR for PUR :
+
+Mantel statistic based on Spearman's rank correlation rho 
+
+Call:
+mantel(xdis = pca_dist, ydis = pcair_dist, method = "spearman",      permutations = 999) 
+
+Mantel statistic r: 0.6781 
+      Significance: 0.001 
+
+Upper quantiles of permutations (null model):
+   90%    95%  97.5%    99% 
+0.0737 0.0910 0.1045 0.1404 
+Permutation: free
+Number of permutations: 999
+

@@ -1,0 +1,14 @@
+NEW PERMANOVA ANALYSIS for Population: MSL 
+
+1. Effect of Method only:
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs      R2      F Pr(>F)
+Model      1   0.0008 0.00008 0.0151      1
+Residual 196  10.2052 0.99992              
+Total    197  10.2060 1.00000              
+
+Note: Only one SuperPop level found, so SuperPop PERMANOVA tests were skipped.
