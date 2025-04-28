@@ -1,0 +1,14 @@
+PERMANOVA results for CLM :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs      R2      F Pr(>F)
+Model      1   0.0007 0.00006 0.0164  0.999
+Residual 262  10.8869 0.99994              
+Total    263  10.8876 1.00000              
+
+Note: Only one SuperPop level found for this population, so SuperPop PERMANOVA tests were skipped.
