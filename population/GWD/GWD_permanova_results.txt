@@ -1,0 +1,14 @@
+PERMANOVA results for GWD :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs R2     F Pr(>F)
+Model      1    0.000  0 1e-04      1
+Residual 354   11.639  1             
+Total    355   11.639  1             
+
+Note: Only one SuperPop level found for this population, so SuperPop PERMANOVA tests were skipped.

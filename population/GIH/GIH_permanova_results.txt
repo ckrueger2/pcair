@@ -1,0 +1,14 @@
+PERMANOVA results for GIH :
+
+1. Effect of Method (PCA vs PC-AIR):
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = pc_matrix ~ Method, data = permanova_data, permutations = 999, method = "euclidean")
+          Df SumOfSqs      R2      F Pr(>F)
+Model      1   0.0008 0.00007 0.0152      1
+Residual 204  10.1169 0.99993              
+Total    205  10.1176 1.00000              
+
+Note: Only one SuperPop level found for this population, so SuperPop PERMANOVA tests were skipped.
