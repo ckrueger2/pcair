@@ -1,5 +1,5 @@
 # pcair
-Full population analysis:
+**Full population analysis:**
 
 01_1000genomes_download.txt: Retrieving Plink files of 1000 genomes Phase 3 data
 
@@ -11,10 +11,10 @@ Full population analysis:
 
 05add_analysis.R: PERMANOVA and Mantel test for additional analysis
 
-Super population analysis:
+**Super population analysis:**
 
 06by_superpop.R: combination of files 3 through 5 for 5 super population subsets
 
-Individual population analysis:
+**Individual population analysis:**
 
 07by_pop.R: combination of files 3 through 5 for 26 individual population subsets
